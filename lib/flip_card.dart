@@ -17,7 +17,11 @@ enum CardSide {
 enum Fill { none, fillFront, fillBack }
 
 class AnimationCard extends StatelessWidget {
-  AnimationCard({this.child, this.animation, this.direction});
+  AnimationCard({
+    this.child,
+    this.animation,
+    this.direction,
+  });
 
   final Widget? child;
   final Animation<double>? animation;
@@ -58,6 +62,7 @@ class FlipCard extends StatefulWidget {
   final VoidCallback? onFlip;
   final BoolCallback? onFlipDone;
   final FlipCardController? controller;
+  final bool reverseAnimation;
   final Fill fill;
   final CardSide side;
 
@@ -99,6 +104,7 @@ class FlipCard extends StatefulWidget {
     this.onFlip,
     this.onFlipDone,
     this.direction = FlipDirection.HORIZONTAL,
+    this.reverseAnimation = true,
     this.controller,
     this.flipOnTouch = true,
     this.alignment = Alignment.center,
@@ -173,8 +179,8 @@ class FlipCardState extends State<FlipCard>
   /// Flip the card
   /// If awaited, returns after animation completes.
   Future<void> toggleCard() async {
-    if(!mounted) return;
-    
+    if (!mounted) return;
+
     widget.onFlip?.call();
 
     final isFrontBefore = isFront;
@@ -236,7 +242,8 @@ class FlipCardState extends State<FlipCard>
       /// absorb the background when the front is active
       ignoring: front ? !isFront : isFront,
       child: AnimationCard(
-        animation: front ? _frontRotation : _backRotation,
+        animation:
+            widget.reverseAnimation && !front ? _backRotation : _frontRotation,
         child: front ? widget.front : widget.back,
         direction: widget.direction,
       ),
