@@ -186,7 +186,8 @@ class FlipCardState extends State<FlipCard>
     final isFrontBefore = isFront;
     controller!.duration = Duration(milliseconds: widget.speed);
 
-    final animation = isFront ? controller!.forward() : controller!.reverse();
+    // final animation = isFront ? controller!.forward() : controller!.reverse();
+    final animation = controller!.forward();
     animation.whenComplete(() {
       if (widget.onFlipDone != null) widget.onFlipDone!(isFront);
       if (!mounted) return;
@@ -242,7 +243,7 @@ class FlipCardState extends State<FlipCard>
       /// absorb the background when the front is active
       ignoring: front ? !isFront : isFront,
       child: AnimationCard(
-        animation: animation,
+        animation: front ? _frontRotation : _backRotation,
         child: front ? widget.front : widget.back,
         direction: widget.direction,
       ),
