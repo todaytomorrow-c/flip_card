@@ -1,6 +1,6 @@
 name: flip_card
 description: A component that provides flip card animation. It could be used for hide and show details of a product.
-version: 0.7.1
+version: 0.7.2
 homepage: https://github.com/todaytomorrow-c/flip_card
 
 environment:
