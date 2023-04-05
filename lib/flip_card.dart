@@ -21,10 +21,12 @@ class AnimationCard extends StatelessWidget {
     this.child,
     this.animation,
     this.direction,
+    this.reverseAnimation = true,
   });
 
   final Widget? child;
   final Animation<double>? animation;
+  final bool? reverseAnimation;
   final FlipDirection? direction;
 
   @override
@@ -62,7 +64,6 @@ class FlipCard extends StatefulWidget {
   final VoidCallback? onFlip;
   final BoolCallback? onFlipDone;
   final FlipCardController? controller;
-  final bool reverseAnimation;
   final Fill fill;
   final CardSide side;
 
@@ -104,7 +105,6 @@ class FlipCard extends StatefulWidget {
     this.onFlip,
     this.onFlipDone,
     this.direction = FlipDirection.HORIZONTAL,
-    this.reverseAnimation = true,
     this.controller,
     this.flipOnTouch = true,
     this.alignment = Alignment.center,
@@ -123,7 +123,7 @@ class FlipCardState extends State<FlipCard>
     with SingleTickerProviderStateMixin {
   AnimationController? controller;
   Animation<double>? _frontRotation;
-  Animation<double>? _backRotation;
+  // Animation<double>? _backRotation;
 
   bool isFront;
 
@@ -150,19 +150,19 @@ class FlipCardState extends State<FlipCard>
         ),
       ],
     ).animate(controller!);
-    _backRotation = TweenSequence(
-      [
-        TweenSequenceItem<double>(
-          tween: ConstantTween<double>(pi / 2),
-          weight: 50.0,
-        ),
-        TweenSequenceItem<double>(
-          tween: Tween(begin: -pi / 2, end: 0.0)
-              .chain(CurveTween(curve: Curves.easeOut)),
-          weight: 50.0,
-        ),
-      ],
-    ).animate(controller!);
+    // _backRotation = TweenSequence(
+    //   [
+    //     TweenSequenceItem<double>(
+    //       tween: ConstantTween<double>(pi / 2),
+    //       weight: 50.0,
+    //     ),
+    //     TweenSequenceItem<double>(
+    //       tween: Tween(begin: -pi / 2, end: 0.0)
+    //           .chain(CurveTween(curve: Curves.easeOut)),
+    //       weight: 50.0,
+    //     ),
+    //   ],
+    // ).animate(controller!);
 
     widget.controller?.state = this;
 
@@ -242,8 +242,7 @@ class FlipCardState extends State<FlipCard>
       /// absorb the background when the front is active
       ignoring: front ? !isFront : isFront,
       child: AnimationCard(
-        animation:
-            widget.reverseAnimation && !front ? _backRotation : _frontRotation,
+        animation: _frontRotation,
         child: front ? widget.front : widget.back,
         direction: widget.direction,
       ),
